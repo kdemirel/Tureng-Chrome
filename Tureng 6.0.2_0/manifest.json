@@ -27,7 +27,7 @@
       "128": "images/icon128.png",
       "48": "images/icon48.png"
    },
-   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDrDkvRdJgmNdq/JoWJO5PRVDNHNZt5FduGlemyWEN8CseTUEgaiX7SKi/9Aed+RKUksAjWSQPu+E6iJXsoFs01p+hY0KvMwORYU05OW+BPYOM2hTaNXd9TlJhxEd/f3ddb6WHCi4pVolRPQWw4AvbbsfciEDBg1FSoMgSt1J8kCQIDAQAB",
+   "key": "",
    "manifest_version": 2,
    "name": "Tureng Dictionary",
    "options_page": "info.html",
