@@ -1,0 +1,63 @@
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <link rel="stylesheet" href="index.css">
+    <style>
+        #iframe_div
+        {
+            border: #000 1px solid;
+            width    : 400px;
+            height   : 360px;
+            overflow : hidden;
+            position : relative;
+        }
+         
+        #main
+        {
+            position : relative;
+            top     : -290px;
+            height  :  650 ;
+        }
+        
+        input[type=text] {
+            align-self: center;
+            width: 398px;
+            box-sizing: border-box;
+            border: 2px solid #BD1E2C;
+            border-radius: 6px;
+            font-size: 16px;
+            background-color: #eeeeee;
+            background-image: url('images/searchicon.png');
+            background-position: 10px 11px; 
+            background-repeat: no-repeat;
+            padding: 10px 20px 10px 40px;
+        }
+    </style>
+</head>
+<body>
+    <div align="center">
+        <table>
+        <tbody>
+        <tr>
+        <form name="my_form" id="my_form" action="http://chrome.tureng.com/Search" method="get" target="main">
+        <td>
+        <input id="search_box" type="text" name="searchTerm" autofocus tabindex="1" autocomplete="off" placeholder="Türkçe veya İngilizce">
+        </td>
+        <td hidden>
+        <input id="submit" name="submit" type="submit" value="" style="width: 0px; height: 0px; border:0; outline: none " tabindex="2">
+        </td>
+        </form>
+        </tr>
+        </tbody>
+        </table>
+        </div>
+
+        <div id="iframe_div" align="center" hidden="true">
+            <iframe id="main" name="main" width="400" style="position: relative; " frameborder="0"></iframe>
+             <hr style="margin:0">
+        </div>
+    
+
+<script src="popup.js"></script>
+</body>
+</html>
