@@ -2,4 +2,4 @@
 
 'Tureng Dictionary' Chrome Extension
 
-Build on Manifest v3.
+Built on Manifest v3.
