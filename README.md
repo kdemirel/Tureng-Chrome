@@ -1,2 +1,5 @@
 # Tureng-Chrome
-Tureng Chrome Extension
+
+'Tureng Dictionary' Chrome Extension
+
+Build on Manifest v3.
