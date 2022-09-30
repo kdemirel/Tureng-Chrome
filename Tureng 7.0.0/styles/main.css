@@ -1,0 +1,52 @@
+body {
+  min-width: 450px;
+}
+
+table {
+  overflow:scroll;
+  font-size: small;
+}
+
+table tbody th {
+  font-size: x-small;
+}
+
+#form_div {
+  padding: 6px 6px 6px 6px;
+}
+
+#search-input {
+  align-self: center;
+  width: 420px;
+  box-sizing: border-box;
+  border: 2px solid #BD1E2C;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #eeeeee;
+  background-image: url('../images/searchicon.png');
+  background-position: 10px 11px; 
+  background-repeat: no-repeat;
+  padding: 10px 20px 10px 40px;
+}
+
+#tureng {
+  background-color: rgb(155, 10, 25);
+  border: 2px solid rgb(155, 10, 25);
+  border-radius: 1;
+  outline: none;
+  display: none;
+}
+
+
+.coming-soon {
+  display: none;
+}
+
+.audio:hover, #difficultyIndex:hover {
+  cursor: pointer;
+}
+
+table tbody a:hover {
+  cursor: pointer;
+}
+

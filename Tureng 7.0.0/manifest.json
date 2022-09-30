@@ -1,0 +1,50 @@
+{
+   "author": "Kerim Demirel",
+   "default_locale": "en",
+   "manifest_version": 3,
+   "name": "Tureng Dictionary",
+   "short_name": "Tureng",
+   "description": "Tureng English-Turkish Online Dictionary",
+   "version": "7.0.0",
+
+   "action": {
+      "default_icon": {
+         "128": "images/AppIcon.png",
+         "256": "images/AppIcon.png"
+      },
+      "default_popup": "popup.html",
+      "default_title": "Tureng Dictionary"
+   },
+   
+   "icons": {
+      "128": "images/AppIcon.png",
+      "16": "images/AppIcon.png",
+      "256": "images/AppIcon.png"
+   },
+
+   "permissions": [ "activeTab", "contextMenus", "scripting" ],
+
+   "background": {
+      "service_worker":  "scripts/background.js" 
+   },
+
+   "options_page": "info.html",
+
+   "commands": {
+      "_execute_action": {
+         "suggested_key": {
+            "chromeos": "Alt+V",
+            "default": "Alt+V",
+            "linux": "Alt+V",
+            "mac": "Alt+V",
+            "windows": "Alt+V"
+         }
+      }
+   },
+
+   "homepage_url": "https://github.com/kdemirel/Tureng-Chrome",
+
+   "omnibox": {
+      "keyword": "ms"
+   }
+}
