@@ -4,7 +4,7 @@
 
 Built on Manifest v3.
 
-# Tureng English-Turkish Online Dictionary
+## Tureng English-Turkish Online Dictionary
 Tureng İngilizce-Türkçe sözlükte arama yapmanızı kolaylaştıran bir eklenti. Sağ üst köşeye eklenen buton ile istediğiniz zaman butona tıklayıp çevrilmesini istediğiniz kelimeyi yazabilir, İngilizce veya Türkçe karşılığını yine aynı pencereden öğrenebilirsiniz. Böylece açık olan sayfanızdan ayrılmadan bilmediğiniz kelimenin anlamına bakabilirsiniz.
 
 EKLENTİ KISAYOLU: ALT + V
