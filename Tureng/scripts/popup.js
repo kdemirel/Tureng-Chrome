@@ -63,6 +63,7 @@ function tureng(str) {
         $('.list-group-item-action').click(function () {
           tureng($(this).text());
         });
+        document.getElementById('voice-tts').style.display = 'none';
       }
 
       if (checkSearchResults.length > 0) {
@@ -77,7 +78,7 @@ function tureng(str) {
                   <th>#</th>
                   <th>${safeResponse.cleanDomString($(eachRow[0]).find('.c2').text())}</th>
                   <th>${safeResponse.cleanDomString($(eachRow[0]).find('.c3').text())}</th>
-                </tr>
+                  </tr>
               </thead>
               <tbody>
               </tbody>
@@ -111,7 +112,7 @@ function tureng(str) {
             <th scope="row" class="align-middle"">${safeResponse.cleanDomString(e.usage)}</th>
             <td><a data-href="${safeResponse.cleanDomString(e.word)}">${safeResponse.cleanDomString(e.word)}</a> ${safeResponse.cleanDomString(e.type) != '' ? '<small>(' + safeResponse.cleanDomString(e.type) + ')</small>' : '' }</td>
             <td><a data-href="${safeResponse.cleanDomString(e.definition)}">${safeResponse.cleanDomString(e.definition)}</a> ${safeResponse.cleanDomString(e.definitionType) != '' ? '<small>(' + safeResponse.cleanDomString(e.definitionType) + ')</small>' : '' }</td>
-          </tr>
+            </tr>
           `);
           })
         });
@@ -123,10 +124,12 @@ function tureng(str) {
         $('table tbody a').click(function (e) {
           tureng($(this).data('href'));
         });
-        
+        document.getElementById('voice-tts').style.display = 'block';
       }
     }
-  }).done(()=>document.getElementById('loading').style.display = 'none');
+  }).done(()=>{
+      document.getElementById('loading').style.display = 'none'; 
+      });
 }
 
 
@@ -164,3 +167,25 @@ window.onload = async () => {
   }
 
 };
+
+// TTS
+document.getElementById('flag-tr').addEventListener('click', ()=>{
+  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'tr-TR', 'rate': 0.8});
+});
+
+document.getElementById('flag-us').addEventListener('click', ()=>{
+  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-US', 'rate': 0.8});
+});
+
+document.getElementById('flag-uk').addEventListener('click', ()=>{
+  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-GB', 'rate': 0.8});
+});
+
+document.getElementById('flag-au').addEventListener('click', ()=>{
+  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-AU', 'rate': 0.8});
+});
+
+// tureng-logo
+document.getElementById('tureng-logo').addEventListener('click', ()=>{
+  chrome.tabs.create({url: 'http://tureng.com/tr/turkce-ingilizce/'+document.getElementById('search-input').value});
+});
