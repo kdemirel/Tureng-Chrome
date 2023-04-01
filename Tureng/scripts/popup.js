@@ -130,6 +130,8 @@ function tureng(str) {
   }).done(()=>{
       document.getElementById('loading').style.display = 'none'; 
       });
+
+  speakGB();
 }
 
 
@@ -170,20 +172,36 @@ window.onload = async () => {
 
 // TTS
 document.getElementById('flag-tr').addEventListener('click', ()=>{
-  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'tr-TR', 'rate': 0.8});
+  speakTR();
 });
 
 document.getElementById('flag-us').addEventListener('click', ()=>{
-  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-US', 'rate': 0.8});
+  speakUS();
 });
 
 document.getElementById('flag-uk').addEventListener('click', ()=>{
-  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-GB', 'rate': 0.8});
+  speakGB();
 });
 
 document.getElementById('flag-au').addEventListener('click', ()=>{
-  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-AU', 'rate': 0.8});
+  speakAU();
 });
+
+function speakTR() {
+  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'tr-TR', 'rate': 0.8});
+}
+
+function speakUS() {
+  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-US', 'rate': 0.8});
+}
+
+function speakGB() {
+  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-GB', 'rate': 0.8});
+}
+
+function speakAU() {
+  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-AU', 'rate': 0.8});
+}
 
 // tureng-logo
 document.getElementById('tureng-logo').addEventListener('click', ()=>{
