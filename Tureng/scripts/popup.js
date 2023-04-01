@@ -129,9 +129,8 @@ function tureng(str) {
     }
   }).done(()=>{
       document.getElementById('loading').style.display = 'none'; 
+      speakGB();
       });
-
-  speakGB();
 }
 
 
