@@ -27,7 +27,7 @@ function sanitize(str) {
   document.getElementById('loading').style.display = 'block';
 
   document.getElementsByClassName('inner-shadow')[0].style.backgroundColor = '#BD1E2C';
-  $('.pie, .dot span').css('background-color', '#'+((1<<24)*Math.random()|0).toString(16) );
+  $('.pie, .dot span').css('background-color', '#' + ((1 << 24) * Math.random() | 0).toString(16));
 
   return str;
 }
@@ -36,8 +36,8 @@ function tureng(str) {
   str = sanitize(str);
 
   $.get({
-    url: 'http://tureng.com/tr/turkce-ingilizce/' + str,
-    complete: function(xhr) {
+    url: 'https://tureng.com/tr/turkce-ingilizce/' + str,
+    complete: function (xhr) {
       if (xhr.status != 200) {
         notFound(str);
       }
@@ -85,12 +85,12 @@ function tureng(str) {
             </table>
           `);
 
-          let array = $.map(eachRow, function(value, index) {
+          let array = $.map(eachRow, function (value, index) {
             return [value];
           });
 
           array.shift();
-          array.forEach((el)=>{
+          array.forEach((el) => {
             if ($(el).find('td').eq(0).attr('colspan') == 2 && $(el).find('td b').length > 0) {
               // subject of the word
             }
@@ -106,12 +106,12 @@ function tureng(str) {
               translations.push(translation);
             }
           });
-          translations.forEach((e)=>{
+          translations.forEach((e) => {
             $('#content table tbody:last').append(`
           <tr>
             <th scope="row" class="align-middle"">${safeResponse.cleanDomString(e.usage)}</th>
-            <td><a data-href="${safeResponse.cleanDomString(e.word)}">${safeResponse.cleanDomString(e.word)}</a> ${safeResponse.cleanDomString(e.type) != '' ? '<small>(' + safeResponse.cleanDomString(e.type) + ')</small>' : '' }</td>
-            <td><a data-href="${safeResponse.cleanDomString(e.definition)}">${safeResponse.cleanDomString(e.definition)}</a> ${safeResponse.cleanDomString(e.definitionType) != '' ? '<small>(' + safeResponse.cleanDomString(e.definitionType) + ')</small>' : '' }</td>
+            <td><a data-href="${safeResponse.cleanDomString(e.word)}">${safeResponse.cleanDomString(e.word)}</a> ${safeResponse.cleanDomString(e.type) != '' ? '<small>(' + safeResponse.cleanDomString(e.type) + ')</small>' : ''}</td>
+            <td><a data-href="${safeResponse.cleanDomString(e.definition)}">${safeResponse.cleanDomString(e.definition)}</a> ${safeResponse.cleanDomString(e.definitionType) != '' ? '<small>(' + safeResponse.cleanDomString(e.definitionType) + ')</small>' : ''}</td>
             </tr>
           `);
           })
@@ -127,18 +127,18 @@ function tureng(str) {
         document.getElementById('voice-tts').style.display = 'block';
       }
     }
-  }).done(()=>{
-      document.getElementById('loading').style.display = 'none'; 
-      });
+  }).done(() => {
+    document.getElementById('loading').style.display = 'none';
+  });
 }
 
 
-document.addEventListener('DOMContentLoaded', ()=>{
-  document.getElementById('tureng').addEventListener('click', ()=>{
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('tureng').addEventListener('click', () => {
     tureng(document.getElementById('search-input').value);
   });
 
-    $('[data-toggle="tooltip"]').tooltip();
+  $('[data-toggle="tooltip"]').tooltip();
 
 });
 
@@ -150,11 +150,11 @@ document.getElementById('search-input').addEventListener('keypress', function (e
 
 // Popup açılışında seçili kelimeyi search_box'a yapıştırır, formu submit eder. 
 window.onload = async () => {
-  const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   let result;
   try {
-    [{result}] = await chrome.scripting.executeScript({
-      target: {tabId: tab.id},
+    [{ result }] = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
       function: () => getSelection().toString(),
     });
   } catch (e) {
@@ -169,23 +169,23 @@ window.onload = async () => {
 };
 
 // TTS
-document.getElementById('flag-tr').addEventListener('click', ()=>{
-  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'tr-TR', 'rate': 0.8});
+document.getElementById('flag-tr').addEventListener('click', () => {
+  chrome.tts.speak(document.getElementById('search-input').value, { 'lang': 'tr-TR', 'rate': 0.8 });
 });
 
-document.getElementById('flag-us').addEventListener('click', ()=>{
-  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-US', 'rate': 0.8});
+document.getElementById('flag-us').addEventListener('click', () => {
+  chrome.tts.speak(document.getElementById('search-input').value, { 'lang': 'en-US', 'rate': 0.8 });
 });
 
-document.getElementById('flag-uk').addEventListener('click', ()=>{
-  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-GB', 'rate': 0.8});
+document.getElementById('flag-uk').addEventListener('click', () => {
+  chrome.tts.speak(document.getElementById('search-input').value, { 'lang': 'en-GB', 'rate': 0.8 });
 });
 
-document.getElementById('flag-au').addEventListener('click', ()=>{
-  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-AU', 'rate': 0.8});
+document.getElementById('flag-au').addEventListener('click', () => {
+  chrome.tts.speak(document.getElementById('search-input').value, { 'lang': 'en-AU', 'rate': 0.8 });
 });
 
 // tureng-logo
-document.getElementById('tureng-logo').addEventListener('click', ()=>{
-  chrome.tabs.create({url: 'http://tureng.com/tr/turkce-ingilizce/'+document.getElementById('search-input').value});
+document.getElementById('tureng-logo').addEventListener('click', () => {
+  chrome.tabs.create({ url: 'http://tureng.com/tr/turkce-ingilizce/' + document.getElementById('search-input').value });
 });
