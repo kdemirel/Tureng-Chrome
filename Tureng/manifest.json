@@ -5,7 +5,6 @@
    "short_name": "Tureng",
    "description": "Tureng English-Turkish Online Dictionary",
    "version": "7.1.1",
-
    "action": {
       "default_icon": {
          "128": "images/AppIcon.png",
@@ -14,34 +13,35 @@
       "default_popup": "popup.html",
       "default_title": "Tureng Dictionary"
    },
-   
    "icons": {
       "128": "images/AppIcon.png",
       "16": "images/AppIcon.png",
       "256": "images/AppIcon.png"
    },
-
-   "permissions": [ "activeTab", "contextMenus", "scripting", "tts" ],
-
+   "permissions": [
+      "activeTab",
+      "contextMenus",
+      "scripting"
+   ],
    "background": {
-      "service_worker":  "scripts/background.js" 
+      "scripts": [
+         "scripts/background.js"
+      ]
    },
-
-   "options_page": "info.html",
-
+   "options_ui": {
+      "page": "info.html"
+   },
    "commands": {
       "_execute_action": {
          "suggested_key": {
-            "chromeos": "Alt+V",
-            "default": "Alt+V",
-            "linux": "Alt+V",
-            "mac": "Alt+V",
-            "windows": "Alt+V"
+            "chromeos": "Ctrl+Alt+V",
+            "default": "Ctrl+Alt+V",
+            "linux": "Ctrl+Alt+V",
+            "mac": "Ctrl+Alt+V",
+            "windows": "Ctrl+Alt+V"
          }
       }
    },
-
-
    "omnibox": {
       "keyword": "ms"
    }
