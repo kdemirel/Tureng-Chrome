@@ -149,13 +149,14 @@ document.getElementById('search-input').addEventListener('keypress', function (e
 });
 
 // Popup açılışında seçili kelimeyi search_box'a yapıştırır, formu submit eder. 
+// Paste the selected word to the search_box on popup open, then submit the form.
 window.onload = async () => {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
   let result;
   try {
-    [{ result }] = await chrome.scripting.executeScript({
+    [{ result }] = await browser.scripting.executeScript({
       target: { tabId: tab.id },
-      function: () => getSelection().toString(),
+      func: () => getSelection().toString(),
     });
   } catch (e) {
     return; // ignoring an unsupported page like chrome://extensions

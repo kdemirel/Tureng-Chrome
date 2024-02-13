@@ -1,13 +1,13 @@
-# Tureng-Chrome
+# Tureng-Firefox
 
-'Tureng Dictionary' Chrome Extension
+'Tureng Dictionary' Firefox Extension
 
 Built on Manifest v3.
 
 ## Tureng English-Turkish Online Dictionary
 Tureng İngilizce-Türkçe sözlükte arama yapmanızı kolaylaştıran bir eklenti. Sağ üst köşeye eklenen buton ile istediğiniz zaman butona tıklayıp çevrilmesini istediğiniz kelimeyi yazabilir, İngilizce veya Türkçe karşılığını yine aynı pencereden öğrenebilirsiniz. Böylece açık olan sayfanızdan ayrılmadan bilmediğiniz kelimenin anlamına bakabilirsiniz.
 
-EKLENTİ KISAYOLU: ALT + V
+EKLENTİ KISAYOLU: CTRL + ALT + V
 
 • Tureng Dictionary ile şunları yapabilirsiniz:
 
@@ -18,7 +18,5 @@ EKLENTİ KISAYOLU: ALT + V
 — Bir kelimeyi seçip sağ tıkladığınızda açılan menüden Tureng'i seçerek doğrudan Tureng.com üzerinden kelimenin anlamına bakabilir, okunuşunu dinleyebilirsiniz.
 
 --
-
-https://chrome.google.com/webstore/detail/tureng-dictionary/ihedienojfhdahpomfldoejaimefofff
 
 https://tureng.com
