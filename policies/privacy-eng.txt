@@ -1,0 +1,19 @@
+Last Updated: September 1, 2025.
+
+This browser extension provides Turkish–English translations and pronunciation using Tureng.com and Google Translate TTS. .
+
+The only data transmitted is the text you type in the search box. No other data, telemetry, or analytics is collected. Your typed search terms are not stored locally or remotely.
+
+The typed text is sent to Tureng.com to fetch translations. If you click a language flag for pronunciation, the text is sent to Google Translate TTS to generate audio. If a typed word is not found in Tureng, the extension may display a Google search link. Clicking this link sends the typed text to Google Search in a new tab. Clicking the Tureng logo sends the typed text to the corresponding Tureng search page.
+
+Your typed text is only sent to the services required for translations, TTS playback, Google search (on user click), or Tureng search (on user click). These third-party services may automatically collect technical metadata, such as IP address, browser type, or device information, according to their own privacy policies. No data is collected by or shared with the extension developer.
+
+All data is processed in memory and not stored on your device or any server. No user data is retained after the extension finishes processing your request.
+
+You may remove the extension at any time. No optional data collection exists, so no opt-out is required.
+
+This extension does not use cookies or tracking of any kind. Any links (e.g., Google search links or Tureng logo links) direct you to third-party websites and are subject to their respective privacy policies.
+
+This extension uses locally bundled Bootstrap and Font Awesome dependencies for styling and icons.
+
+For privacy-related questions, please contact through https://github.com/EmreKaratopuk/Tureng-Firefox.
