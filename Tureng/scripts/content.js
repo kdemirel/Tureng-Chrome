@@ -4,6 +4,7 @@
   const POPUP_ID = 'tureng-selection-popup';
   const STYLE_ID = 'tureng-selection-style';
   let MAX_RESULTS = 5;
+  let cachedPanel = null;
 
   function ensureStyles() {
     if (document.getElementById(STYLE_ID)) {
@@ -25,6 +26,7 @@
         max-width: 360px;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
         font-size: 13px;
+        display: none;
       }
       #${POPUP_ID} .tureng-title {
         font-weight: 600;
@@ -61,25 +63,31 @@
     document.head.appendChild(style);
   }
 
-  function removePopup() {
-    const existing = document.getElementById(POPUP_ID);
-    if (existing) {
-      existing.remove();
+  function getPanel() {
+    if (cachedPanel && document.body.contains(cachedPanel)) {
+      return cachedPanel;
+    }
+    ensureStyles();
+    const panel = document.createElement('div');
+    panel.id = POPUP_ID;
+    document.body.appendChild(panel);
+    cachedPanel = panel;
+    return panel;
+  }
+
+  function hidePopup() {
+    if (cachedPanel) {
+      cachedPanel.style.display = 'none';
     }
   }
 
-  function createPopup(position) {
-    removePopup();
-    ensureStyles();
-
-    const popup = document.createElement('div');
-    popup.id = POPUP_ID;
-    popup.style.left = `${Math.max(8, position.x)}px`;
-    popup.style.top = `${Math.max(8, position.y)}px`;
-    popup.innerHTML = `<div class="tureng-loading">Loading…</div>`;
-
-    document.body.appendChild(popup);
-    return popup;
+  function showPopupAt(position) {
+    const panel = getPanel();
+    panel.style.left = `${Math.max(8, position.x)}px`;
+    panel.style.top = `${Math.max(8, position.y)}px`;
+    panel.innerHTML = `<div class="tureng-loading">Loading…</div>`;
+    panel.style.display = 'block';
+    return panel;
   }
 
   function getSelectionText() {
@@ -103,35 +111,23 @@
     };
   }
 
-  function parseResults(htmlText) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlText, 'text/html');
-    const resultsTable = doc.querySelector('.searchResultsTable');
-    if (!resultsTable) {
-      return [];
-    }
-
-    const rows = Array.from(resultsTable.querySelectorAll('tr'))
-      .filter((row) => row.querySelector('td.rc0'));
-
-    return rows.slice(0, MAX_RESULTS).map((row) => {
-      const cells = row.querySelectorAll('td');
-      const wordCell = cells[2];
-      const defCell = cells[3];
-      return {
-        word: wordCell ? wordCell.textContent.trim() : '',
-        definition: defCell ? defCell.textContent.trim() : ''
-      };
-    }).filter((row) => row.word && row.definition);
-  }
-
-  async function fetchTureng(term) {
-    const response = await fetch(`https://tureng.com/tr/turkce-ingilizce/${encodeURIComponent(term)}`);
-    if (!response.ok) {
-      throw new Error('Request failed');
-    }
-    const text = await response.text();
-    return parseResults(text);
+  function fetchTureng(term) {
+    return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage(
+        { type: 'TUR_ENG_FETCH', term, maxResults: MAX_RESULTS },
+        (response) => {
+          if (chrome.runtime.lastError) {
+            reject(new Error(chrome.runtime.lastError.message));
+            return;
+          }
+          if (response && response.success) {
+            resolve(response.results);
+          } else {
+            reject(new Error('No results'));
+          }
+        }
+      );
+    });
   }
 
   async function showPopupForSelection() {
@@ -140,7 +136,7 @@
       return;
     }
 
-    const popup = createPopup(getSelectionPosition());
+    const popup = showPopupAt(getSelectionPosition());
     popup.querySelector('.tureng-loading').textContent = `Searching "${term}"…`;
 
     try {
@@ -212,14 +208,13 @@
 
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
-      removePopup();
+      hidePopup();
     }
   });
 
   document.addEventListener('click', (event) => {
-    const popup = document.getElementById(POPUP_ID);
-    if (popup && !popup.contains(event.target)) {
-      removePopup();
+    if (cachedPanel && cachedPanel.style.display !== 'none' && !cachedPanel.contains(event.target)) {
+      hidePopup();
     }
   });
 
