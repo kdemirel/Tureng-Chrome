@@ -2,7 +2,9 @@
   'use strict';
 
   const defaultSettings = {
-    modifier: 'alt'
+    modifier: 'alt',
+    maxResults: 5,
+    ttsRate: 0.8
   };
 
   const modifierSelect = document.getElementById('modifier-select');

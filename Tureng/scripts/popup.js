@@ -168,21 +168,91 @@ window.onload = async () => {
 
 };
 
-// TTS
+// ---- Inline Settings Panel ----
+const settingsDefaults = { modifier: 'alt', maxResults: 5, ttsRate: 0.8 };
+let currentSettings = { ...settingsDefaults };
+
+function loadPopupSettings() {
+  chrome.storage.sync.get(settingsDefaults, (stored) => {
+    currentSettings = { ...settingsDefaults, ...stored };
+    applyPopupSettings();
+  });
+}
+
+function applyPopupSettings() {
+  const modSelect = document.getElementById('popup-modifier-select');
+  const maxSelect = document.getElementById('popup-max-results');
+  const rateSlider = document.getElementById('popup-tts-rate');
+  const rateLabel = document.getElementById('tts-rate-value');
+
+  if (modSelect) modSelect.value = currentSettings.modifier;
+  if (maxSelect) maxSelect.value = String(currentSettings.maxResults);
+  if (rateSlider) rateSlider.value = currentSettings.ttsRate;
+  if (rateLabel) rateLabel.textContent = currentSettings.ttsRate;
+}
+
+function savePopupSettings() {
+  const modSelect = document.getElementById('popup-modifier-select');
+  const maxSelect = document.getElementById('popup-max-results');
+  const rateSlider = document.getElementById('popup-tts-rate');
+
+  currentSettings.modifier = modSelect ? modSelect.value : settingsDefaults.modifier;
+  currentSettings.maxResults = maxSelect ? parseInt(maxSelect.value, 10) : settingsDefaults.maxResults;
+  currentSettings.ttsRate = rateSlider ? parseFloat(rateSlider.value) : settingsDefaults.ttsRate;
+
+  chrome.storage.sync.set(currentSettings, () => {
+    const status = document.getElementById('popup-settings-status');
+    if (status) {
+      status.style.display = 'block';
+      clearTimeout(savePopupSettings._timer);
+      savePopupSettings._timer = setTimeout(() => {
+        status.style.display = 'none';
+      }, 1200);
+    }
+  });
+}
+
+// Toggle panel open/close
+document.getElementById('settings-toggle').addEventListener('click', () => {
+  const panel = document.getElementById('settings-panel');
+  const btn = document.getElementById('settings-toggle');
+  panel.classList.toggle('open');
+  btn.classList.toggle('panel-open');
+});
+document.getElementById('settings-close').addEventListener('click', () => {
+  document.getElementById('settings-panel').classList.remove('open');
+  document.getElementById('settings-toggle').classList.remove('panel-open');
+});
+
+// Wire setting controls
+document.getElementById('popup-modifier-select').addEventListener('change', savePopupSettings);
+document.getElementById('popup-max-results').addEventListener('change', savePopupSettings);
+document.getElementById('popup-tts-rate').addEventListener('input', () => {
+  document.getElementById('tts-rate-value').textContent = document.getElementById('popup-tts-rate').value;
+});
+document.getElementById('popup-tts-rate').addEventListener('change', savePopupSettings);
+
+loadPopupSettings();
+
+// TTS (uses stored rate)
+function getTtsRate() {
+  return currentSettings.ttsRate || 0.8;
+}
+
 document.getElementById('flag-tr').addEventListener('click', ()=>{
-  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'tr-TR', 'rate': 0.8});
+  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'tr-TR', 'rate': getTtsRate()});
 });
 
 document.getElementById('flag-us').addEventListener('click', ()=>{
-  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-US', 'rate': 0.8});
+  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-US', 'rate': getTtsRate()});
 });
 
 document.getElementById('flag-uk').addEventListener('click', ()=>{
-  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-GB', 'rate': 0.8});
+  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-GB', 'rate': getTtsRate()});
 });
 
 document.getElementById('flag-au').addEventListener('click', ()=>{
-  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-AU', 'rate': 0.8});
+  chrome.tts.speak(document.getElementById('search-input').value, {'lang': 'en-AU', 'rate': getTtsRate()});
 });
 
 // tureng-logo

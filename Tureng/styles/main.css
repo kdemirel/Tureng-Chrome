@@ -86,3 +86,162 @@ table tbody a:hover {
 .search_results {
   width: 450px;
 }
+
+/* ---- Settings Toggle Button ---- */
+#settings-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #BD1E2C, #e0313f);
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 14px;
+  margin-left: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.25s, box-shadow 0.25s, transform 0.15s;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(189, 30, 44, 0.35);
+  animation: settingsPulse 2s ease-in-out 0.5s 3;
+}
+#settings-toggle i {
+  font-size: 15px;
+  transition: transform 0.4s ease;
+}
+#settings-toggle:hover {
+  background: linear-gradient(135deg, #a01825, #c9252f);
+  box-shadow: 0 3px 10px rgba(189, 30, 44, 0.5);
+  transform: translateY(-1px);
+}
+#settings-toggle:hover i {
+  transform: rotate(90deg);
+}
+#settings-toggle:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(189, 30, 44, 0.3);
+}
+#settings-toggle.panel-open {
+  background: linear-gradient(135deg, #8a1420, #a01825);
+}
+
+@keyframes settingsPulse {
+  0%, 100% { box-shadow: 0 2px 6px rgba(189, 30, 44, 0.35); }
+  50% { box-shadow: 0 2px 14px rgba(189, 30, 44, 0.6); }
+}
+
+/* ---- Settings Panel ---- */
+#settings-panel {
+  display: none;
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin: 0 6px 8px 6px;
+  font-size: 13px;
+  overflow: hidden;
+  animation: settingsSlideDown 0.2s ease-out;
+}
+
+@keyframes settingsSlideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 400px;
+  }
+}
+
+#settings-panel.open {
+  display: block;
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #BD1E2C;
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+}
+.settings-header i {
+  margin-right: 5px;
+}
+.settings-header button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.8;
+}
+.settings-header button:hover {
+  opacity: 1;
+}
+
+.settings-body {
+  padding: 10px 12px;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.settings-row label {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-weight: 500;
+  color: #444;
+  min-width: 160px;
+}
+.settings-row select,
+.settings-row input[type="range"] {
+  flex: 1;
+}
+.settings-row select {
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 12px;
+}
+.settings-row input[type="range"] {
+  cursor: pointer;
+}
+.settings-row #tts-rate-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  min-width: 24px;
+  text-align: center;
+}
+
+#popup-settings-status {
+  color: #2e7d32;
+  font-size: 12px;
+  margin: 0;
+  padding: 2px 0;
+  display: none;
+  transition: opacity 0.3s;
+}
+
+.settings-footer {
+  padding: 6px 12px 8px;
+  border-top: 1px solid #e0e0e0;
+  text-align: right;
+}
+.settings-footer a {
+  color: #BD1E2C;
+  font-size: 12px;
+  text-decoration: none;
+}
+.settings-footer a:hover {
+  text-decoration: underline;
+}

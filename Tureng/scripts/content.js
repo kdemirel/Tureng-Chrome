@@ -3,7 +3,8 @@
 
   const POPUP_ID = 'tureng-selection-popup';
   const STYLE_ID = 'tureng-selection-style';
-  const MAX_RESULTS = 5;
+  let MAX_RESULTS = 5;
+  let cachedPanel = null;
 
   function ensureStyles() {
     if (document.getElementById(STYLE_ID)) {
@@ -25,6 +26,7 @@
         max-width: 360px;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
         font-size: 13px;
+        display: none;
       }
       #${POPUP_ID} .tureng-title {
         font-weight: 600;
@@ -61,25 +63,76 @@
     document.head.appendChild(style);
   }
 
-  function removePopup() {
-    const existing = document.getElementById(POPUP_ID);
-    if (existing) {
-      existing.remove();
+  function getPanel() {
+    if (cachedPanel && document.body.contains(cachedPanel)) {
+      return cachedPanel;
+    }
+    ensureStyles();
+    const panel = document.createElement('div');
+    panel.id = POPUP_ID;
+    document.body.appendChild(panel);
+    cachedPanel = panel;
+    return panel;
+  }
+
+  function hidePopup() {
+    if (cachedPanel) {
+      cachedPanel.style.display = 'none';
     }
   }
 
-  function createPopup(position) {
-    removePopup();
-    ensureStyles();
+  function showPopupAt(position) {
+    const panel = getPanel();
+    panel.style.left = `${Math.max(8, position.x)}px`;
+    panel.style.top = `${Math.max(8, position.y)}px`;
+    const loading = document.createElement('div');
+    loading.className = 'tureng-loading';
+    loading.textContent = 'Loading…';
+    panel.replaceChildren(loading);
+    panel.style.display = 'block';
+    return panel;
+  }
 
-    const popup = document.createElement('div');
-    popup.id = POPUP_ID;
-    popup.style.left = `${Math.max(8, position.x)}px`;
-    popup.style.top = `${Math.max(8, position.y)}px`;
-    popup.innerHTML = `<div class="tureng-loading">Loading…</div>`;
+  function renderMessage(popup, className, message) {
+    const messageEl = document.createElement('div');
+    messageEl.className = className;
+    messageEl.textContent = message;
+    popup.replaceChildren(messageEl);
+  }
 
-    document.body.appendChild(popup);
-    return popup;
+  function renderResults(popup, term, results) {
+    const fragment = document.createDocumentFragment();
+    const title = document.createElement('div');
+    title.className = 'tureng-title';
+    title.textContent = term;
+    fragment.appendChild(title);
+
+    results.forEach((row) => {
+      const rowEl = document.createElement('div');
+      rowEl.className = 'tureng-row';
+
+      const wordEl = document.createElement('div');
+      wordEl.className = 'tureng-word';
+      wordEl.textContent = row.word;
+
+      const defEl = document.createElement('div');
+      defEl.className = 'tureng-def';
+      defEl.textContent = row.definition;
+
+      rowEl.appendChild(wordEl);
+      rowEl.appendChild(defEl);
+      fragment.appendChild(rowEl);
+    });
+
+    const link = document.createElement('a');
+    link.className = 'tureng-link';
+    link.href = `https://tureng.com/tr/turkce-ingilizce/${encodeURIComponent(term)}`;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.textContent = 'Open in Tureng';
+    fragment.appendChild(link);
+
+    popup.replaceChildren(fragment);
   }
 
   function getSelectionText() {
@@ -103,35 +156,23 @@
     };
   }
 
-  function parseResults(htmlText) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlText, 'text/html');
-    const resultsTable = doc.querySelector('.searchResultsTable');
-    if (!resultsTable) {
-      return [];
-    }
-
-    const rows = Array.from(resultsTable.querySelectorAll('tr'))
-      .filter((row) => row.querySelector('td.rc0'));
-
-    return rows.slice(0, MAX_RESULTS).map((row) => {
-      const cells = row.querySelectorAll('td');
-      const wordCell = cells[2];
-      const defCell = cells[3];
-      return {
-        word: wordCell ? wordCell.textContent.trim() : '',
-        definition: defCell ? defCell.textContent.trim() : ''
-      };
-    }).filter((row) => row.word && row.definition);
-  }
-
-  async function fetchTureng(term) {
-    const response = await fetch(`https://tureng.com/tr/turkce-ingilizce/${encodeURIComponent(term)}`);
-    if (!response.ok) {
-      throw new Error('Request failed');
-    }
-    const text = await response.text();
-    return parseResults(text);
+  function fetchTureng(term) {
+    return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage(
+        { type: 'TUR_ENG_FETCH', term, maxResults: MAX_RESULTS },
+        (response) => {
+          if (chrome.runtime.lastError) {
+            reject(new Error(chrome.runtime.lastError.message));
+            return;
+          }
+          if (response && response.success) {
+            resolve(response.results);
+          } else {
+            reject(new Error('No results'));
+          }
+        }
+      );
+    });
   }
 
   async function showPopupForSelection() {
@@ -140,33 +181,25 @@
       return;
     }
 
-    const popup = createPopup(getSelectionPosition());
+    const popup = showPopupAt(getSelectionPosition());
     popup.querySelector('.tureng-loading').textContent = `Searching "${term}"…`;
 
     try {
       const results = await fetchTureng(term);
       if (results.length === 0) {
-        popup.innerHTML = `<div class="tureng-error">No results found.</div>`;
+        renderMessage(popup, 'tureng-error', 'No results found.');
         return;
       }
 
-      popup.innerHTML = `
-        <div class="tureng-title">${term}</div>
-        ${results.map((row) => `
-          <div class="tureng-row">
-            <div class="tureng-word">${row.word}</div>
-            <div class="tureng-def">${row.definition}</div>
-          </div>
-        `).join('')}
-        <a class="tureng-link" href="https://tureng.com/tr/turkce-ingilizce/${encodeURIComponent(term)}" target="_blank" rel="noopener">Open in Tureng</a>
-      `;
+      renderResults(popup, term, results);
     } catch (err) {
-      popup.innerHTML = `<div class="tureng-error">Failed to fetch results.</div>`;
+      renderMessage(popup, 'tureng-error', 'Failed to fetch results.');
     }
   }
 
   const defaultSettings = {
-    modifier: 'alt'
+    modifier: 'alt',
+    maxResults: 5
   };
 
   let settings = { ...defaultSettings };
@@ -174,6 +207,7 @@
   function loadSettings() {
     chrome.storage.sync.get(defaultSettings, (stored) => {
       settings = { ...defaultSettings, ...stored };
+      MAX_RESULTS = settings.maxResults || 5;
     });
   }
 
@@ -210,14 +244,13 @@
 
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
-      removePopup();
+      hidePopup();
     }
   });
 
   document.addEventListener('click', (event) => {
-    const popup = document.getElementById(POPUP_ID);
-    if (popup && !popup.contains(event.target)) {
-      removePopup();
+    if (cachedPanel && cachedPanel.style.display !== 'none' && !cachedPanel.contains(event.target)) {
+      hidePopup();
     }
   });
 
@@ -233,6 +266,10 @@
     }
     if (changes.modifier) {
       settings.modifier = changes.modifier.newValue;
+    }
+    if (changes.maxResults) {
+      settings.maxResults = changes.maxResults.newValue;
+      MAX_RESULTS = settings.maxResults || 5;
     }
   });
 
